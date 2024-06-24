@@ -68,6 +68,19 @@ void Shader::setFloat(const std::string &name, float value) const {
   glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
+void Shader::setVec2f(const std::string &name, float x, float y) const {
+  glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y);
+}
+
+void Shader::setVec3f(const std::string &name, float x, float y,
+                      float z) const {
+  glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
+}
+
+void Shader::setVec4f(const std::string &name, float x, float y, float z,
+                      float w) const {
+  glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
+}
 void Shader::m_checkCompileErrors(unsigned int shader, std::string type) const {
   int success;
   char infoLog[1024];
@@ -84,7 +97,7 @@ void Shader::m_checkCompileErrors(unsigned int shader, std::string type) const {
     if (!success) {
       glGetProgramInfoLog(shader, 1024, NULL, infoLog);
       std::cout << "ERROR::PROGRAM_LINKING ERROR of type: " << type << "\n"
-                << infoLog << "\n -- ---------------------------------- -- "
+                << infoLog << "\n -- -------------------------------- -- "
                 << std::endl;
     }
   }

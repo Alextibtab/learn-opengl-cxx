@@ -1,5 +1,6 @@
 #include "shader.hpp"
 
+#include <cmath>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -39,10 +40,14 @@ int main() {
   std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes
             << std::endl;
 
-  float vertices[] = {-0.5f, -0.5f, 0.0f, -0.5f, 0.5f, 0.0f,
-                      0.5f,  -0.5f, 0.0f, 0.5f,  0.5f, 0.0f};
+  float vertices[] = {
+      // Positions        // colors
+      -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+      0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
+      0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f  // top
+  };
 
-  unsigned int indices[] = {3, 2, 0, 3, 1, 0};
+  unsigned int indices[] = {0, 1, 2};
 
   Shader program = Shader("../src/vertex.glsl", "../src/fragment.glsl");
   program.use();
@@ -59,8 +64,12 @@ int main() {
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
                GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+                        (void *)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);

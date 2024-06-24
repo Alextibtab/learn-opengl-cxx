@@ -21,7 +21,6 @@ add_library(GLAD "lib/glad.c")
 set(LIBS GLFW3 ${OPENGL_LIBRARY} GLAD)
 
 include_directories(
-	"${CMAKE_SOURCE_DIR}/src"
 	"${CMAKE_SOURCE_DIR}/include"
 	"${CMAKE_SOURCE_DIR}/include/glad"
 	"${CMAKE_SOURCE_DIR}/include/glm"
