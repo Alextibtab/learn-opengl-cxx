@@ -12,13 +12,15 @@ file(GLOB_RECURSE HEADER_FILES
 	${CMAKE_SOURCE_DIR}/src/*.hpp)
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror -Wextra -Wconversion -Wsign-conversion -Weffc++)
 
 find_package(OpenGL REQUIRED)
 find_library(GLFW3 "lib/libglfw3.a")
 
 add_library(GLAD "lib/glad.c")
+add_library(STB_IMAGE "lib/stb_image.c")
 
-set(LIBS GLFW3 ${OPENGL_LIBRARY} GLAD)
+set(LIBS GLFW3 ${OPENGL_LIBRARY} GLAD STB_IMAGE)
 
 include_directories(
 	"${CMAKE_SOURCE_DIR}/include"

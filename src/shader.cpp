@@ -1,7 +1,7 @@
 #include "shader.hpp"
 #include <sstream>
 
-Shader::Shader(const char *vertexPath, const char *fragmentPath) {
+Shader::Shader(const char *vertexPath, const char *fragmentPath) : ID{0} {
   std::string vertexCode;
   std::string fragmentCode;
   std::ifstream vShaderFile;
