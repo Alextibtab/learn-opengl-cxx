@@ -1,4 +1,5 @@
 #include "shader.hpp"
+#include "gtc/type_ptr.hpp"
 #include <sstream>
 
 Shader::Shader(const char *vertexPath, const char *fragmentPath) : ID{0} {
@@ -81,6 +82,12 @@ void Shader::setVec4f(const std::string &name, float x, float y, float z,
                       float w) const {
   glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
 }
+
+void Shader::setMat4f(const std::string &name, glm::mat4 a) const {
+  glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE,
+                     glm::value_ptr(a));
+}
+
 void Shader::m_checkCompileErrors(unsigned int shader, std::string type) const {
   int success;
   char infoLog[1024];
