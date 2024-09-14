@@ -3,6 +3,9 @@
 #include <cmath>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "stb_image.h"
 
 #include <iostream>
@@ -43,6 +46,8 @@ int main() {
   std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes
             << std::endl;
 
+  ////// Define quad vertex positions, color and texture coordinates.
+
   float vertices[] = {
       // Positions        // colors      // Texture coords
       0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
@@ -51,8 +56,12 @@ int main() {
       -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // top left
   };
 
-  unsigned int indices[] = {0, 1, 3, 1, 2, 3};
+  unsigned int indices[] = {
+      0, 1, 3, 1,
+      2, 3}; // The index for drawing the quad. aka the two separate triangles
+             // that make up the quad.
 
+  ////// Define the texture for drawing on the quad
   unsigned int texture;
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
@@ -72,10 +81,13 @@ int main() {
 
   glBindTexture(GL_TEXTURE_2D, texture);
 
+  ////// Create shader and send dirtTexture to the shader
   Shader program = Shader("../src/vertex.glsl", "../src/fragment.glsl");
   glUniform1i(glGetUniformLocation(program.ID, "dirtTexture"), 0);
   program.use();
 
+  ////// Create the vertex array object, vertex buffer object and element buffer
+  /// object.
   unsigned int VAO, VBO, EBO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -114,7 +126,14 @@ int main() {
     glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::rotate(trans, glm::radians(45.0f), glm::vec3(0.0, 0.0, 1.0));
+    trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+
     program.use();
+    unsigned int transformLoc = glGetUniformLocation(program.ID, "transform");
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     // check and call events and swap image buffers
